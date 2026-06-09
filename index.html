@@ -34,7 +34,7 @@
     <script>
     
     function carregarContas() {
-    fetch('http://127.0.0.1:8000')
+    fetch('https://sistema-pix.onrender.com')
         .then(response => response.json())
         .then(dados => {
             const corpoTabela = document.getElementById('corpo-tabela');
