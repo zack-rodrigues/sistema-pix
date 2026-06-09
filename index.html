@@ -34,7 +34,7 @@
     <script>
     
     function carregarContas() {
-    fetch('https://sistema-pix.onrender.com')
+    fetch('https://sistema-pix.onrender.com/transferir')
         .then(response => response.json())
         .then(dados => {
             const corpoTabela = document.getElementById('corpo-tabela');
@@ -60,7 +60,7 @@
         const destino = document.getElementById('destino').value;
         const valor = document.getElementById('valor').value;
 
-        fetch('https://sistema-pix.onrender.com', { // Note que agora estamos chamando a rota correta
+        fetch('https://sistema-pix.onrender.com/transferir', { // Note que agora estamos chamando a rota correta
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ origem, destino, valor })
