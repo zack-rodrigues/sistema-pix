@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Banco</title>
+</head>
+<body>
+    <h1>Contas do Banco</h1>
+    <div id="lista-contas">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Conta</th>
+                    <th>Nome</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela">
+                </tbody>
+        </table>
+    </div>
+
+    <hr>
+    
+    <h2>Realizar Transferência</h2>
+    <form id="form-transferencia">
+        <input type="text" id="origem" placeholder="Conta de Origem">
+        <input type="text" id="destino" placeholder="Conta de Destino">
+        <input type="number" id="valor" placeholder="Valor">
+        <button type="submit">Transferir</button>
+    </form>
+<div id="mensagem-status" style="color: red; margin-top: 10px;"></div>
+
+    <script>
+    
+    function carregarContas() {
+    fetch('http://127.0.0.1:8000')
+        .then(response => response.json())
+        .then(dados => {
+            const corpoTabela = document.getElementById('corpo-tabela');
+            corpoTabela.innerHTML = ''; // Limpa a tabela
+
+            // Usamos Object.entries para converter o dicionário em uma lista iterável
+            Object.entries(dados).forEach(([id, conta]) => {
+                const tr = document.createElement('tr');
+                // Agora 'id' é a chave ("111") e 'conta' é o objeto com nome/saldo
+                tr.innerHTML = `<td>${id}</td><td>${conta.nome}</td><td>${conta.saldo}</td>`;
+                corpoTabela.appendChild(tr);
+            });
+        });
+}
+
+    // 1. Chamamos aqui para carregar a tabela ao abrir a página
+    carregarContas();
+
+    document.getElementById("form-transferencia").addEventListener('submit', event => {
+        event.preventDefault();
+
+        const origem = document.getElementById('origem').value;
+        const destino = document.getElementById('destino').value;
+        const valor = document.getElementById('valor').value;
+
+        fetch('http://127.0.0.1:8000/transferir', { // Note que agora estamos chamando a rota correta
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ origem, destino, valor })
+})
+.then(response => response.json()) // 1. Converte a resposta do servidor em JSON
+.then(data => {
+    const divMensagem = document.getElementById('mensagem-status');
+    
+    if (data.erro) {
+        // 2. Se houver erro, exibimos ele
+        divMensagem.innerText = data.erro;
+    } else {
+        // 3. Caso contrário, confirmamos o sucesso e limpamos a mensagem
+        divMensagem.style.color = 'green';
+        divMensagem.innerText = data.mensagem;
+        carregarContas();
+    }
+});
+    });
+</script>    
+             
+</body>
+</html>
