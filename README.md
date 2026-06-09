@@ -9,7 +9,7 @@ Este projeto nasceu como um simples script de terminal em Python e evoluiu para 
 
 ## 🔗 Links do Projeto
 
-- **Aplicação Web (Frontend):** [Clique aqui para acessar o MiniPix](https://[SEU-USUARIO].github.io/sistema-pix/) *(Hospedado no GitHub Pages)*
+- **Aplicação Web (Frontend):** [Clique aqui para acessar o MiniPix](https://zack-rodrigues.github.io/sistema-pix/) *(Hospedado no GitHub Pages)*
 - **API (Backend):** `https://sistema-pix.onrender.com/` *(Hospedada no Render)*
 
 ---
@@ -43,7 +43,7 @@ Caso queira rodar o ambiente de desenvolvimento na sua máquina:
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/](https://github.com/)[SEU-USUARIO]/sistema-pix.git
+   git clone https://github.com/zack-rodrigues/sistema-pix.git
    cd sistema-pix
    ```
 
