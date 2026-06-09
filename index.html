@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody id="corpo-tabela">
-                </tbody>
+            </tbody>
         </table>
     </div>
 
@@ -29,62 +29,64 @@
         <input type="number" id="valor" placeholder="Valor">
         <button type="submit">Transferir</button>
     </form>
-<div id="mensagem-status" style="color: red; margin-top: 10px;"></div>
+    <div id="mensagem-status" style="color: red; margin-top: 10px;"></div>
 
     <script>
-    
-    function carregarContas() {
-    fetch('https://sistema-pix.onrender.com/transferir')
-        .then(response => response.json())
-        .then(dados => {
-            const corpoTabela = document.getElementById('corpo-tabela');
-            corpoTabela.innerHTML = ''; // Limpa a tabela
-        .then(dados => {
-    console.log("Dados recebidos do servidor:", dados); // ADICIONE ISSO
-    const corpoTabela = document.getElementById('corpo-tabela');
-    corpoTabela.innerHTML = '';
-            // Usamos Object.entries para converter o dicionário em uma lista iterável
-            
-            Object.entries(dados).forEach(([id, conta]) => {
-                const tr = document.createElement('tr');
-                // Agora 'id' é a chave ("111") e 'conta' é o objeto com nome/saldo
-                tr.innerHTML = `<td>${id}</td><td>${conta.nome}</td><td>${conta.saldo}</td>`;
-                corpoTabela.appendChild(tr);
+        // Função para buscar a lista de contas (GET)
+        function carregarContas() {
+            // Nota: Aponta para a raiz '/' do servidor
+            fetch('https://sistema-pix.onrender.com/')
+                .then(response => response.json())
+                .then(dados => {
+                    const corpoTabela = document.getElementById('corpo-tabela');
+                    corpoTabela.innerHTML = ''; 
+                    
+                    Object.entries(dados).forEach(([id, conta]) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${id}</td><td>${conta.nome}</td><td>${conta.saldo}</td>`;
+                        corpoTabela.appendChild(tr);
+                    });
+                })
+                .catch(err => console.error("Erro ao carregar contas:", err));
+        }
+
+        // Carrega ao abrir a página
+        carregarContas();
+
+        // Função para realizar transferência (POST)
+        document.getElementById("form-transferencia").addEventListener('submit', event => {
+            event.preventDefault();
+
+            const origem = document.getElementById('origem').value;
+            const destino = document.getElementById('destino').value;
+            const valor = document.getElementById('valor').value;
+
+            // Nota: Aponta para '/transferir'
+            fetch('https://sistema-pix.onrender.com/transferir', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ origem, destino, valor })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const divMensagem = document.getElementById('mensagem-status');
+                
+                if (data.erro) {
+                    divMensagem.style.color = 'red';
+                    divMensagem.innerText = data.erro;
+                } else {
+                    divMensagem.style.color = 'green';
+                    divMensagem.innerText = data.mensagem;
+                    // Limpa os campos após sucesso
+                    document.getElementById('form-transferencia').reset();
+                    // Atualiza a tabela com os novos saldos
+                    carregarContas();
+                }
+            })
+            .catch(err => {
+                console.error("Erro na transferência:", err);
             });
         });
-}
-
-    // 1. Chamamos aqui para carregar a tabela ao abrir a página
-    carregarContas();
-
-    document.getElementById("form-transferencia").addEventListener('submit', event => {
-        event.preventDefault();
-
-        const origem = document.getElementById('origem').value;
-        const destino = document.getElementById('destino').value;
-        const valor = document.getElementById('valor').value;
-
-        fetch('https://sistema-pix.onrender.com/transferir', { // Note que agora estamos chamando a rota correta
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ origem, destino, valor })
-})
-.then(response => response.json()) // 1. Converte a resposta do servidor em JSON
-.then(data => {
-    const divMensagem = document.getElementById('mensagem-status');
-    
-    if (data.erro) {
-        // 2. Se houver erro, exibimos ele
-        divMensagem.innerText = data.erro;
-    } else {
-        // 3. Caso contrário, confirmamos o sucesso e limpamos a mensagem
-        divMensagem.style.color = 'green';
-        divMensagem.innerText = data.mensagem;
-        carregarContas();
-    }
-});
-    });
-</script>    
-             
+    </script>
 </body>
 </html>
