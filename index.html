@@ -39,8 +39,12 @@
         .then(dados => {
             const corpoTabela = document.getElementById('corpo-tabela');
             corpoTabela.innerHTML = ''; // Limpa a tabela
-
+        .then(dados => {
+    console.log("Dados recebidos do servidor:", dados); // ADICIONE ISSO
+    const corpoTabela = document.getElementById('corpo-tabela');
+    corpoTabela.innerHTML = '';
             // Usamos Object.entries para converter o dicionário em uma lista iterável
+            
             Object.entries(dados).forEach(([id, conta]) => {
                 const tr = document.createElement('tr');
                 // Agora 'id' é a chave ("111") e 'conta' é o objeto com nome/saldo
