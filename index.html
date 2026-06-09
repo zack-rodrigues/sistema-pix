@@ -60,7 +60,7 @@
         const destino = document.getElementById('destino').value;
         const valor = document.getElementById('valor').value;
 
-        fetch('http://127.0.0.1:8000/transferir', { // Note que agora estamos chamando a rota correta
+        fetch('https://sistema-pix.onrender.com', { // Note que agora estamos chamando a rota correta
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ origem, destino, valor })
